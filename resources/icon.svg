@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Minimalist lightbulb icon in white -->
+  
+  <!-- Bulb outline -->
+  <path d="M 64 20 
+           C 45 20, 32 33, 32 50
+           C 32 60, 36 68, 42 74
+           L 42 86
+           L 86 86
+           L 86 74
+           C 92 68, 96 60, 96 50
+           C 96 33, 83 20, 64 20 Z"
+        fill="none" 
+        stroke="#ffffff" 
+        stroke-width="6"
+        stroke-linejoin="round" />
+  
+  <!-- Base threads -->
+  <line x1="42" y1="92" x2="86" y2="92" stroke="#ffffff" stroke-width="6" stroke-linecap="round" />
+  <line x1="42" y1="100" x2="86" y2="100" stroke="#ffffff" stroke-width="6" stroke-linecap="round" />
+  
+  <!-- Bottom cap -->
+  <path d="M 48 106 L 80 106" 
+        fill="none"
+        stroke="#ffffff" 
+        stroke-width="6" 
+        stroke-linecap="round" />
+</svg>

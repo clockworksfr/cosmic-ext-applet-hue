@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>fr.clockworks.cosmic-ext-applet-hue</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  
+  <name>COSMIC Hue</name>
+  <summary>Control Philips Hue lights from your COSMIC desktop</summary>
+  
+  <description>
+    <p>
+      COSMIC Hue is a system tray applet for the COSMIC desktop environment that provides 
+      quick and easy control of your Philips Hue smart lighting system.
+    </p>
+    <p>
+      Features include automatic bridge discovery, control of individual lights and groups, 
+      brightness and color adjustment with an integrated color picker, quick access to scenes, 
+      and support for multiple languages.
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">fr.clockworks.cosmic-ext-applet-hue.desktop</launchable>
+  
+  <url type="homepage">https://github.com/clockworksfr/cosmic-ext-applet-hue</url>
+  <url type="bugtracker">https://github.com/clockworksfr/cosmic-ext-applet-hue/issues</url>
+  <url type="vcs-browser">https://github.com/clockworksfr/cosmic-ext-applet-hue</url>
+  
+  <developer id="fr.clockworks">
+    <name>Simon Dupont - ClockWorks</name>
+  </developer>
+  
+  <screenshots>
+    <screenshot type="default">
+      <caption>Lights View</caption>
+      <image>https://raw.githubusercontent.com/clockworksfr/cosmic-ext-applet-hue/main/screenshots/screenshot_1.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Groups View</caption>
+      <image>https://raw.githubusercontent.com/clockworksfr/cosmic-ext-applet-hue/main/screenshots/screenshot_2.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Scenes View</caption>
+      <image>https://raw.githubusercontent.com/clockworksfr/cosmic-ext-applet-hue/main/screenshots/screenshot_3.png</image>
+    </screenshot>
+  </screenshots>
+  
+  <releases>
+    <release version="0.1.0" date="2026-02-17">
+      <description>
+        <p>Initial release</p>
+        <ul>
+          <li>Automatic Hue bridge discovery</li>
+          <li>Control lights: on/off, brightness, color</li>
+          <li>Manage groups</li>
+          <li>Quick access to scenes</li>
+          <li>Integrated color picker</li>
+          <li>Multi-language support (English, French)</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+  
+  <content_rating type="oars-1.1"/>
+  
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  
+  <supports>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <control>touch</control>
+  </supports>
+  
+  <categories>
+    <category>Utility</category>
+    <category>Settings</category>
+  </categories>
+  
+  <keywords>
+    <keyword>hue</keyword>
+    <keyword>philips</keyword>
+    <keyword>lights</keyword>
+    <keyword>smart home</keyword>
+    <keyword>COSMIC</keyword>
+  </keywords>
+</component>

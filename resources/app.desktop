@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=COSMIC™ Hue Applet
+Comment=An applet to manage Philips Hue lights for the COSMIC™ desktop
+Type=Application
+Icon=fr.clockworks.cosmic-ext-applet-hue
+Exec=cosmic-ext-applet-hue
+Terminal=false
+StartupNotify=true
+Categories=COSMIC
+Keywords=COSMIC
+NoDisplay=true
+X-CosmicApplet=true
+X-CosmicHoverPopup=Auto
+MimeType=
