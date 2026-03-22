@@ -18,8 +18,11 @@ no-color-picker-item-selected = Není vybrána žádná položka výběru barev
 
 # Sections
 lights = Světla
+lights-count = Světla ({$count})
 groups = Skupiny
+groups-count = Skupiny ({$count})
 scenes = Scény
+scenes-count = Scény ({$count})
 
 # Empty states
 no-lights-found = Nebyla nalezena žádná světla
@@ -32,3 +35,7 @@ light-has-no-state = Světlo {$name} nemá žádný stav
 # Scene formatting
 global = Globální
 scene-name-group-name = {$name} - {$group_name}
+
+# O aplikaci
+license = Licence
+repository = Repozitář

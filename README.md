@@ -11,7 +11,7 @@ This repository has been made with the [COSMIC applet template][COSMIC applet te
 - Manage groups to control multiple lights together
 - Quick access to your Hue scenes
 - Integrated color picker
-- Multi-language support (English, French)
+- Multi-language support (English, French, Czech (thanks @lorduskordus), Spanish (AI-generated), Italian (AI-generated), German (AI-generated), Portuguese (AI-generated), Dutch (AI-generated))
 
 ## Screenshots
 

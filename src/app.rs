@@ -20,6 +20,10 @@ use std::collections::HashMap;
 use std::net::IpAddr;
 use std::net::Ipv4Addr;
 
+fn h_space<'a, M: 'a>() -> Element<'a, M> {
+    widget::horizontal_space().into()
+}
+
 /// The application model stores app-specific state used to describe its interface and
 /// drive its logic.
 pub struct AppModel {
@@ -92,6 +96,7 @@ pub struct SceneVm {
     id: String,
     name: String,
     group: String,
+    group_name: String,
 }
 
 /// Messages emitted by the application and its widgets.
@@ -205,10 +210,19 @@ impl cosmic::Application for AppModel {
     }
 
     fn view(&self) -> Element<'_, Self::Message> {
-        // Load the custom lightbulb icon
-        const LIGHTBULB_ICON: &[u8] = include_bytes!("../resources/icon.svg");
-        let icon_handle = icon::from_svg_bytes(LIGHTBULB_ICON);
-        
+        let stroke = if cosmic::theme::is_dark() { "#ffffff" } else { "#1a1a1a" };
+        let svg = format!(
+            r#"<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <path d="M 64 20 C 45 20, 32 33, 32 50 C 32 60, 36 68, 42 74 L 42 86 L 86 86 L 86 74 C 92 68, 96 60, 96 50 C 96 33, 83 20, 64 20 Z"
+        fill="none" stroke="{stroke}" stroke-width="6" stroke-linejoin="round" />
+  <line x1="42" y1="92" x2="86" y2="92" stroke="{stroke}" stroke-width="6" stroke-linecap="round" />
+  <line x1="42" y1="100" x2="86" y2="100" stroke="{stroke}" stroke-width="6" stroke-linecap="round" />
+  <path d="M 48 106 L 80 106" fill="none" stroke="{stroke}" stroke-width="6" stroke-linecap="round" />
+</svg>"#
+        );
+        let icon_handle = icon::from_svg_bytes(svg.into_bytes());
+
         self.core
             .applet
             .icon_button_from_handle(icon_handle)
@@ -218,40 +232,76 @@ impl cosmic::Application for AppModel {
 
     fn view_window(&self, id: Id) -> Element<'_, Self::Message> {        
         if Some(id) == self.more_menu_popup {
-            let container = widget::container(
-                        widget::column::with_children(vec![
-                            widget::flex_row(
-                                vec![
-                                    widget::text(fl!("bridge-ip")).into(),
-                                    widget::horizontal_space().into(),
-                                    widget::text(self.config.get_bridge_ip().unwrap_or(&IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0))).to_string()).into(),
-                                ]
-                            ).padding(10).into(),
-                            widget::divider::horizontal::default().into(),
-                            widget::flex_row(
-                                vec![
-                                    widget::button::destructive(fl!("unpair-bridge")).on_press(Message::UnpairBridge).into(),
-                                ]
-                            ).padding(10).into(),
-                        ])
-                        .spacing(10)
-                ).padding(10).style(
-                    |theme| widget::container::Style {
+            let bridge_ip_str = self
+                .config
+                .get_bridge_ip()
+                .unwrap_or(&IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)))
+                .to_string();
+
+            let content = widget::column::column()
+                .spacing(8)
+                .push(
+                    widget::row::with_children(vec![
+                        widget::text::body(fl!("bridge-ip")).into(),
+                        h_space(),
+                        widget::text::caption(bridge_ip_str).into(),
+                    ])
+                    .align_y(Alignment::Center),
+                )
+                .push(widget::divider::horizontal::default())
+                .push(
+                    widget::button::destructive(fl!("unpair-bridge"))
+                        .on_press(Message::UnpairBridge),
+                )
+                .push(widget::divider::horizontal::default())
+                .push(
+                    widget::column::column()
+                        .spacing(4)
+                        .push(widget::text::heading(format!(
+                            "{} v{}",
+                            env!("CARGO_PKG_NAME"),
+                            env!("CARGO_PKG_VERSION")
+                        )))
+                        .push(widget::text::caption(env!("CARGO_PKG_DESCRIPTION")))
+                        .push(
+                            widget::row::with_children(vec![
+                                widget::text::body(fl!("license")).into(),
+                                h_space(),
+                                widget::text::caption(env!("CARGO_PKG_LICENSE")).into(),
+                            ]),
+                        )
+                        .push(
+                            widget::row::with_children(vec![
+                                widget::text::body(fl!("repository")).into(),
+                                h_space(),
+                                widget::text::caption(env!("CARGO_PKG_REPOSITORY")).into(),
+                            ]),
+                        ),
+                );
+
+            let container = widget::container(content).padding(12).style(
+                |theme| {
+                    let cosmic = theme.cosmic();
+                    widget::container::Style {
+                        background: Some(cosmic::iced::Background::Color(
+                            cosmic.background.component.base.into(),
+                        )),
                         border: cosmic::iced::Border {
-                            color: theme.cosmic().accent.base.into(),
+                            color: cosmic.accent.base.into(),
                             width: 2.0,
-                            radius: 8.0.into(),
+                            radius: 12.0.into(),
                         },
                         ..Default::default()
-                    },
-                );
-            
+                    }
+                },
+            );
+
             self.core
                 .applet
                 .popup_container(container)
-                .min_width(120.0)
-                .max_width(360.0)
-                .limits(Limits::NONE.min_width(120.0).max_width(360.0))
+                .min_width(200.0)
+                .max_width(500.0)
+                .limits(Limits::NONE.min_width(200.0).max_width(500.0))
                 .into()
         } else if Some(id) == self.color_picker_popup {
 
@@ -287,15 +337,12 @@ impl cosmic::Application for AppModel {
                 .limits(Limits::NONE.min_width(120.0).max_width(360.0))
                 .into()
         } else {
-            let mut content_list = widget::list_column().add(widget::text(fl!("app-title")).align_y(Alignment::Center).height(30.0));
+            let mut content_list = widget::list_column().add(
+                widget::text::heading(fl!("app-title"))
+                    .align_y(Alignment::Center),
+            );
 
             if self.config.get_username().is_none() {
-                let button = if self.is_scanning {
-                    widget::button::text(fl!("configure"))
-                } else {
-                    widget::button::text(fl!("configure")).on_press(Message::DiscoverBridge)
-                };
-
                 let discovery_text = if self.is_scanning {
                     fl!("searching-for-bridges").to_string()
                 } else {
@@ -306,25 +353,41 @@ impl cosmic::Application for AppModel {
                     }
                 };
 
-                let discovery_text = widget::text(discovery_text);
-                content_list = content_list.add(discovery_text);
-                content_list = content_list.add(button);
+                content_list = content_list.add(widget::text::body(discovery_text));
+
+                let configure_btn = if self.is_scanning {
+                    widget::button::suggested(fl!("configure"))
+                } else {
+                    widget::button::suggested(fl!("configure"))
+                        .on_press(Message::DiscoverBridge)
+                };
+                content_list = content_list.add(configure_btn);
 
                 if let Some(bridge_ip) = self.config.get_bridge_ip() {
-                    content_list = content_list.add(widget::text(fl!("bridge-found-description")));
                     content_list = content_list.add(
-                        widget::flex_row(vec![
-                            widget::text(fl!("bridge", bridge_ip = bridge_ip.to_string())).into(),
-                            widget::horizontal_space().into(),
-                            widget::button::text(fl!("pair-bridge")).on_press(Message::PairBridge).into(),
-                        ]));
+                        widget::text::caption(fl!("bridge-found-description")),
+                    );
+                    content_list = content_list.add(
+                        widget::row::with_children(vec![
+                            widget::text::body(fl!("bridge", bridge_ip = bridge_ip.to_string())).into(),
+                            h_space(),
+                            widget::button::suggested(fl!("pair-bridge"))
+                                .on_press(Message::PairBridge)
+                                .into(),
+                        ])
+                        .align_y(Alignment::Center),
+                    );
                 }
             } else {
                 content_list = widget::list_column().add(
-                    widget::flex_row(vec![
-                        widget::text(fl!("app-title")).align_y(Alignment::Center).height(30.0).into(),
-                        widget::horizontal_space().into(),
-                        widget::button::icon(widget::icon::from_name("view-more-symbolic")).on_press(Message::ToggleMoreMenu).into(),
+                    widget::row::with_children(vec![
+                        widget::text::heading(fl!("app-title"))
+                            .align_y(Alignment::Center)
+                            .into(),
+                        h_space(),
+                        widget::button::icon(icon::from_name("emblem-system-symbolic"))
+                            .on_press(Message::ToggleMoreMenu)
+                            .into(),
                     ])
                 ).into();
                 
@@ -337,24 +400,19 @@ impl cosmic::Application for AppModel {
                     ]);
                 }
 
-                // Build the lights list
                 content_list = content_list.add(self.build_lights_section());
-
-                // Build the groups list
                 content_list = content_list.add(self.build_groups_section());
-
-                // Build the scenes list
                 content_list = content_list.add(self.build_scenes_section());
             }
             content_list = content_list.into();
 
             let main_container = widget::container(content_list).padding(10);
-    
+
             self.core
                 .applet
                 .popup_container(main_container)
-                .min_width(200.0)
-                .max_width(200.0)
+                .min_width(500.0)
+                .max_width(500.0)
                 .limits(Limits::NONE.min_width(500.0).max_width(500.0))
                 .into()
         }
@@ -581,9 +639,10 @@ impl cosmic::Application for AppModel {
                     })
                     .collect();
 
-                // Trier par ordre alphabétique
                 groups_vm.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
                 self.groups = groups_vm;
+
+                self.resolve_scene_group_names();
             }
             Message::GroupsLoaded(Err(error)) => {
                 println!("Error loading groups: {:?}", error);
@@ -605,15 +664,25 @@ impl cosmic::Application for AppModel {
                 println!("Scenes loaded: {}", scenes.len());
                 let mut scenes_vm: Vec<SceneVm> = scenes
                     .into_iter()
-                    .map(|scene| SceneVm {
-                        id: scene.id,
-                        name: scene.name,
-                        group: scene.group.unwrap_or_else(String::new),
+                    .map(|scene| {
+                        let group_id = scene.group.unwrap_or_else(String::new);
+                        let group_name = self.groups.iter()
+                            .find(|g| g.id == group_id)
+                            .map(|g| g.name.clone())
+                            .unwrap_or_else(|| fl!("global").to_string());
+                        SceneVm {
+                            id: scene.id,
+                            name: scene.name,
+                            group: group_id,
+                            group_name,
+                        }
                     })
                     .collect();
 
-                // Trier par ordre alphabétique
-                scenes_vm.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+                scenes_vm.sort_by(|a, b| {
+                    a.name.to_lowercase().cmp(&b.name.to_lowercase())
+                        .then_with(|| a.group_name.to_lowercase().cmp(&b.group_name.to_lowercase()))
+                });
                 self.scenes = scenes_vm;
             }
             Message::ScenesLoaded(Err(error)) => {
@@ -988,10 +1057,10 @@ impl cosmic::Application for AppModel {
                         None,
                     );
                     more_menu_popup_settings.positioner.size_limits = Limits::NONE
-                        .max_width(200.0)
-                        .min_width(120.0)
+                        .max_width(500.0)
+                        .min_width(200.0)
                         .min_height(120.0)
-                        .max_height(200.0);
+                        .max_height(500.0);
 
                     more_menu_popup_settings.positioner.anchor = Anchor::TopRight;
                     more_menu_popup_settings.positioner.gravity = Gravity::BottomRight;
@@ -1031,54 +1100,64 @@ impl cosmic::Application for AppModel {
 }
 
 impl AppModel {
-    /// Build the lights section with header and light controls
     fn build_lights_section<'a>(&'a self) -> Element<'a, Message> {
-        let lights_header = widget::flex_row(vec![
-            widget::text::heading(fl!("lights"))
+        let header_text = if self.lights.is_empty() {
+            fl!("lights")
+        } else {
+            fl!("lights-count", count = self.lights.len().to_string())
+        };
+        let lights_header = widget::row::with_children(vec![
+            widget::text::heading(header_text)
                 .align_y(Alignment::Center)
-                .height(30.0)
                 .into(),
-            widget::horizontal_space().into(),
-            widget::button::icon(widget::icon::from_name(if self.lights_menu_expanded {
-                "pan-up-symbolic"
+            h_space(),
+            widget::button::icon(icon::from_name(if self.lights_menu_expanded {
+                "go-up-symbolic"
             } else {
-                "pan-down-symbolic"
+                "go-down-symbolic"
             }))
             .on_press(Message::ToggleLightsMenu)
             .into(),
         ]);
 
+        let mut col = widget::column::column().spacing(4).push(lights_header);
+
         if self.lights_menu_expanded {
             if self.lights.is_empty() {
-                return widget::flex_row(vec![lights_header.into(), widget::text(fl!("no-lights-found")).into()]).into();
+                col = col.push(
+                    widget::container(widget::text::caption(fl!("no-lights-found")))
+                        .padding([8, 12])
+                        .width(Length::Fill),
+                );
+            } else {
+                let children: Vec<_> = self
+                    .lights
+                    .iter()
+                    .map(|light| self.build_light_item(light))
+                    .collect();
+
+                col = col.push(
+                    widget::scrollable(
+                        widget::column::with_children(children).spacing(4),
+                    )
+                    .height(Length::Fixed(600.0)),
+                );
             }
-
-            let children: Vec<_> = self
-                .lights
-                .iter()
-                .map(|light| self.build_light_item(light).padding(10).into())
-                .collect();
-
-            let content =
-                widget::scrollable(widget::column::with_children(children).spacing(0)).spacing(10)
-                    .height(Length::Fixed(600.0));
-
-            widget::flex_row(vec![lights_header.into(), content.into()]).into()
-        } else {
-            widget::flex_row(vec![lights_header.into()]).into()
         }
+
+        col.into()
     }
 
-    /// Build a single light item with controls
-    fn build_light_item<'a>(&'a self, light: &'a LightVm) -> widget::Column<'a, Message> {
+    fn build_light_item<'a>(&'a self, light: &'a LightVm) -> Element<'a, Message> {
         if let Some(on) = light.on {
-            let name_toggle_row = widget::flex_row(vec![
-                widget::text(&light.name).into(),
-                widget::horizontal_space().into(),
+            let name_toggle_row = widget::row::with_children(vec![
+                widget::text::body(&light.name).into(),
+                h_space(),
                 widget::toggler(on)
                     .on_toggle(|new_state| Message::ToggleLight(light.id.clone(), new_state))
                     .into(),
-            ]);
+            ])
+            .align_y(Alignment::Center);
 
             let (light_brightness, light_brightness_percent) = match light.brightness {
                 Some(bri) => (
@@ -1088,12 +1167,7 @@ impl AppModel {
                 None => (0.0, 0.0),
             };
 
-            // Get the current color as RGB (if available)
-            let (r, g, b) = if let Some((r, g, b)) = light.color {
-                (r, g, b)
-            } else {
-                (0.0, 0.0, 0.0)
-            };
+            let (r, g, b) = light.color.unwrap_or((0.0, 0.0, 0.0));
 
             let color_button = widget::color_picker::color_button(
                 Some(Message::ToggleColorPicker((
@@ -1115,77 +1189,112 @@ impl AppModel {
                     color_button.into()
                 };
 
-            let slider_color_row = widget::flex_row(vec![
+            let slider_color_row = widget::row::with_children(vec![
                 widget::slider(1.0..=254.0, light_brightness, |new_brightness| {
                     Message::SetLightBrightness(light.id.clone(), new_brightness)
                 })
                 .into(),
-                widget::text(format!("{}%", light_brightness_percent)).into(),
-                widget::horizontal_space().into(),
+                widget::text::caption(format!("{}%", light_brightness_percent)).into(),
+                h_space(),
                 color_button,
-            ]);
+            ])
+            .spacing(8)
+            .align_y(Alignment::Center);
 
-            widget::column::column()
-                .width(Length::Fill)
-                .spacing(10.0)
-                .push(name_toggle_row)
-                .push(slider_color_row)
+            widget::container(
+                widget::column::column()
+                    .width(Length::Fill)
+                    .spacing(6)
+                    .push(name_toggle_row)
+                    .push(slider_color_row),
+            )
+            .padding([8, 12])
+            .width(Length::Fill)
+            .style(|theme| {
+                let cosmic = theme.cosmic();
+                widget::container::Style {
+                    background: Some(cosmic::iced::Background::Color(
+                        cosmic.background.component.hover.into(),
+                    )),
+                    border: cosmic::iced::Border {
+                        radius: 8.0.into(),
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                }
+            })
+            .into()
         } else {
-            widget::column::column().push(widget::settings::item(
-                &light.name,
-                widget::text(fl!("light-has-no-state", name = light.name.clone())),
-            ))
+            widget::container(
+                widget::text::caption(fl!(
+                    "light-has-no-state",
+                    name = light.name.clone()
+                )),
+            )
+            .padding([8, 12])
+            .width(Length::Fill)
+            .into()
         }
     }
 
-    /// Build the groups section with header and group controls
     fn build_groups_section<'a>(&'a self) -> Element<'a, Message> {
-        let groups_header = widget::flex_row(vec![
-            widget::text::heading(fl!("groups"))
+        let header_text = if self.groups.is_empty() {
+            fl!("groups")
+        } else {
+            fl!("groups-count", count = self.groups.len().to_string())
+        };
+        let groups_header = widget::row::with_children(vec![
+            widget::text::heading(header_text)
                 .align_y(Alignment::Center)
-                .height(30.0)
                 .into(),
-            widget::horizontal_space().into(),
-            widget::button::icon(widget::icon::from_name(if self.groups_menu_expanded {
-                "pan-up-symbolic"
+            h_space(),
+            widget::button::icon(icon::from_name(if self.groups_menu_expanded {
+                "go-up-symbolic"
             } else {
-                "pan-down-symbolic"
+                "go-down-symbolic"
             }))
             .on_press(Message::ToggleGroupsMenu)
             .into(),
         ]);
 
+        let mut col = widget::column::column().spacing(4).push(groups_header);
+
         if self.groups_menu_expanded {
             if self.groups.is_empty() {
-                return widget::flex_row(vec![groups_header.into(), widget::text(fl!("no-groups-found")).into()]).into();
+                col = col.push(
+                    widget::container(widget::text::caption(fl!("no-groups-found")))
+                        .padding([8, 12])
+                        .width(Length::Fill),
+                );
+            } else {
+                let children: Vec<_> = self
+                    .groups
+                    .iter()
+                    .map(|group| self.build_group_item(group))
+                    .collect();
+
+                col = col.push(
+                    widget::scrollable(
+                        widget::column::with_children(children).spacing(4),
+                    )
+                    .height(Length::Fixed(600.0)),
+                );
             }
-
-            let children: Vec<_> = self
-                .groups
-                .iter()
-                .map(|group| self.build_group_item(group).padding(10).into())
-                .collect();
-
-            let content =
-                widget::scrollable(widget::column::with_children(children).spacing(0))
-                    .height(Length::Fixed(600.0));
-
-            widget::flex_row(vec![groups_header.into(), content.into()]).into()
-        } else {
-            widget::flex_row(vec![groups_header.into()]).into()
         }
+
+        col.into()
     }
 
-    /// Build a single group item with controls
-    fn build_group_item<'a>(&'a self, group: &'a GroupVm) -> widget::Column<'a, Message> {
+    fn build_group_item<'a>(&'a self, group: &'a GroupVm) -> Element<'a, Message> {
         if let Some(on) = group.on {
-            let name_toggle_row = widget::flex_row(vec![
-                widget::text(&group.name).into(),
-                widget::horizontal_space().into(),
+            let name_toggle_row = widget::row::with_children(vec![
+                widget::text::body(&group.name).into(),
+                h_space(),
                 widget::toggler(on)
                     .on_toggle(|new_state| Message::ToggleGroup(group.id.clone(), new_state))
                     .into(),
-            ]);
+            ])
+            .align_y(Alignment::Center);
 
             let (group_brightness, group_brightness_percent) = match group.brightness {
                 Some(bri) => (
@@ -1195,12 +1304,7 @@ impl AppModel {
                 None => (0.0, 0.0),
             };
 
-            // Get the current color as RGB (if available)
-            let (r, g, b) = if let Some((r, g, b)) = group.color {
-                (r, g, b)
-            } else {
-                (0.0, 0.0, 0.0)
-            };
+            let (r, g, b) = group.color.unwrap_or((0.0, 0.0, 0.0));
 
             let color_button = widget::color_picker::color_button(
                 Some(Message::ToggleColorPicker((
@@ -1222,88 +1326,145 @@ impl AppModel {
                     color_button.into()
                 };
 
-            let slider_color_row = widget::flex_row(vec![
+            let slider_color_row = widget::row::with_children(vec![
                 widget::slider(1.0..=254.0, group_brightness, |new_brightness| {
                     Message::SetGroupBrightness(group.id.clone(), new_brightness)
                 })
                 .into(),
-                widget::text(format!("{}%", group_brightness_percent)).into(),
-                widget::horizontal_space().into(),
+                widget::text::caption(format!("{}%", group_brightness_percent)).into(),
+                h_space(),
                 color_button,
-            ]);
+            ])
+            .spacing(8)
+            .align_y(Alignment::Center);
 
-            widget::column::column()
-                .spacing(10.0)
-                .push(name_toggle_row)
-                .push(slider_color_row)
+            widget::container(
+                widget::column::column()
+                    .spacing(6)
+                    .push(name_toggle_row)
+                    .push(slider_color_row),
+            )
+            .padding([8, 12])
+            .width(Length::Fill)
+            .style(|theme| {
+                let cosmic = theme.cosmic();
+                widget::container::Style {
+                    background: Some(cosmic::iced::Background::Color(
+                        cosmic.background.component.hover.into(),
+                    )),
+                    border: cosmic::iced::Border {
+                        radius: 8.0.into(),
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                }
+            })
+            .into()
         } else {
-            widget::column::column().push(widget::settings::item(
-                &group.name,
-                widget::text(format!("Group {} has no state", group.name)),
-            ))
+            widget::container(
+                widget::text::caption(format!("Group {} has no state", group.name)),
+            )
+            .padding([8, 12])
+            .width(Length::Fill)
+            .into()
         }
     }
 
-    /// Build the scenes section with header and scene controls
     fn build_scenes_section<'a>(&'a self) -> Element<'a, Message> {
-        let scenes_header = widget::flex_row(vec![
-            widget::text::heading(fl!("scenes"))
+        let header_text = if self.scenes.is_empty() {
+            fl!("scenes")
+        } else {
+            fl!("scenes-count", count = self.scenes.len().to_string())
+        };
+        let scenes_header = widget::row::with_children(vec![
+            widget::text::heading(header_text)
                 .align_y(Alignment::Center)
-                .height(30.0)
                 .into(),
-            widget::horizontal_space().into(),
-            widget::button::icon(widget::icon::from_name(if self.scenes_menu_expanded {
-                "pan-up-symbolic"
+            h_space(),
+            widget::button::icon(icon::from_name(if self.scenes_menu_expanded {
+                "go-up-symbolic"
             } else {
-                "pan-down-symbolic"
+                "go-down-symbolic"
             }))
             .on_press(Message::ToggleScenesMenu)
             .into(),
         ]);
 
+        let mut col = widget::column::column().spacing(4).push(scenes_header);
+
         if self.scenes_menu_expanded {
             if self.scenes.is_empty() {
-                return widget::flex_row(vec![scenes_header.into(), widget::text(fl!("no-scenes-found")).into()]).into();
-            }
-
-            let children: Vec<_> = self
-                .scenes
-                .iter()
-                .map(|scene| self.build_scene_item(scene).padding(10).into())
-                .collect();
-
-            let content =
-                widget::scrollable(widget::column::with_children(children).spacing(0))
-                    .height(Length::Fixed(600.0));
-
-            widget::flex_row(vec![scenes_header.into(), content.into()]).into()
-        } else {
-            widget::flex_row(vec![scenes_header.into()]).into()
-        }
-    }
-
-    /// Build a single scene item with controls
-    fn build_scene_item<'a>(&'a self, scene: &'a SceneVm) -> widget::FlexRow<'a, Message> {
-        let group_name =
-            if let Some(group) = self.groups.iter().find(|group| group.id == scene.group) {
-                group.name.clone()
+                col = col.push(
+                    widget::container(widget::text::caption(fl!("no-scenes-found")))
+                        .padding([8, 12])
+                        .width(Length::Fill),
+                );
             } else {
-                fl!("global").to_string()
-            };
-        let display_text = fl!("scene-name-group-name", name = scene.name.clone(), group_name = group_name);
-        widget::flex_row(vec![
-            widget::text(display_text)
-                .align_y(Alignment::Center)
-                .height(30.0)
-                .into(),
-            widget::horizontal_space().into(),
-            widget::button::icon(widget::icon::from_name("pan-end-symbolic"))
-                .on_press(Message::ActivateScene(scene.id.clone()))
-                .into(),
-        ])
+                let children: Vec<_> = self
+                    .scenes
+                    .iter()
+                    .map(|scene| self.build_scene_item(scene))
+                    .collect();
+
+                col = col.push(
+                    widget::scrollable(
+                        widget::column::with_children(children).spacing(4),
+                    )
+                    .height(Length::Fixed(600.0)),
+                );
+            }
+        }
+
+        col.into()
+    }
+
+    fn build_scene_item<'a>(&'a self, scene: &'a SceneVm) -> Element<'a, Message> {
+        widget::container(
+            widget::row::with_children(vec![
+                widget::column::column()
+                    .spacing(2)
+                    .push(widget::text::body(&scene.name))
+                    .push(widget::text::caption(&scene.group_name))
+                    .into(),
+                h_space(),
+                widget::button::icon(icon::from_name("media-playback-start-symbolic"))
+                    .on_press(Message::ActivateScene(scene.id.clone()))
+                    .into(),
+            ])
+            .align_y(Alignment::Center),
+        )
+        .padding([8, 12])
+        .width(Length::Fill)
+        .style(|theme| {
+            let cosmic = theme.cosmic();
+            widget::container::Style {
+                background: Some(cosmic::iced::Background::Color(
+                    cosmic.background.component.hover.into(),
+                )),
+                border: cosmic::iced::Border {
+                    radius: 8.0.into(),
+                    ..Default::default()
+                },
+                ..Default::default()
+            }
+        })
+        .into()
     }
 
 
+
+    fn resolve_scene_group_names(&mut self) {
+        for scene in &mut self.scenes {
+            scene.group_name = self.groups.iter()
+                .find(|g| g.id == scene.group)
+                .map(|g| g.name.clone())
+                .unwrap_or_else(|| fl!("global").to_string());
+        }
+        self.scenes.sort_by(|a, b| {
+            a.name.to_lowercase().cmp(&b.name.to_lowercase())
+                .then_with(|| a.group_name.to_lowercase().cmp(&b.group_name.to_lowercase()))
+        });
+    }
 
     fn open_color_picker_popup(&mut self) -> Task<cosmic::Action<Message>> {
         let new_id = Id::unique();

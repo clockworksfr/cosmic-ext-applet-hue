@@ -18,8 +18,11 @@ no-color-picker-item-selected = Aucun élément sélectionné pour le sélecteur
 
 # Sections
 lights = Lumières
+lights-count = Lumières ({$count})
 groups = Groupes
+groups-count = Groupes ({$count})
 scenes = Scènes
+scenes-count = Scènes ({$count})
 
 # États vides
 no-lights-found = Aucune lumière trouvée
@@ -32,3 +35,7 @@ light-has-no-state = La lumière {$name} n'a pas d'état
 # Formatage des scènes
 global = Global
 scene-name-group-name = {$name} - {$group_name}
+
+# À propos
+license = Licence
+repository = Dépôt

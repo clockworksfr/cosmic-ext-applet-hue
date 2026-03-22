@@ -2,6 +2,12 @@
 Name=COSMIC™ Hue Applet
 Comment=An applet to manage Philips Hue lights for the COSMIC™ desktop
 Comment[cs]=Applet pro správu světel Philips Hue v prostředí COSMIC™
+Comment[fr]=Un applet pour gérer les lumières Philips Hue pour le bureau COSMIC™
+Comment[es]=Un applet para gestionar las luces Philips Hue para el escritorio COSMIC™
+Comment[it]=Un applet per gestire le luci Philips Hue per il desktop COSMIC™
+Comment[de]=Ein Applet zur Verwaltung von Philips Hue Lichtern für den COSMIC™-Desktop
+Comment[pt]=Um applet para gerir as luzes Philips Hue para o ambiente de trabalho COSMIC™
+Comment[nl]=Een applet om Philips Hue lampen te beheren voor de COSMIC™-desktop
 Type=Application
 Icon=fr.clockworks.cosmic-ext-applet-hue
 Exec=cosmic-ext-applet-hue

@@ -7,6 +7,12 @@
   <name>COSMIC Hue</name>
   <summary>Control Philips Hue lights from your COSMIC desktop</summary>
   <summary xml:lang="cs">Ovládejte světla Philips Hue z vašeho prostředí COSMIC</summary>
+  <summary xml:lang="fr">Contrôlez vos lumières Philips Hue depuis votre bureau COSMIC</summary>
+  <summary xml:lang="es">Controla tus luces Philips Hue desde tu escritorio COSMIC</summary>
+  <summary xml:lang="it">Controlla le tue luci Philips Hue dal tuo desktop COSMIC</summary>
+  <summary xml:lang="de">Steuern Sie Ihre Philips Hue Lichter von Ihrem COSMIC-Desktop</summary>
+  <summary xml:lang="pt">Controle suas luzes Philips Hue a partir do seu ambiente de trabalho COSMIC</summary>
+  <summary xml:lang="nl">Beheer uw Philips Hue lampen vanaf uw COSMIC-desktop</summary>
   
   <description>
     <p>
@@ -17,6 +23,30 @@
         COSMIC Hue je applet v systémové liště pro prostředí COSMIC, který poskytuje 
         rychlé a jednoduché ovládání vašeho chytrého osvětlení Philips Hue.
     </p>
+    <p xml:lang="fr">
+        COSMIC Hue est un applet de la barre système pour l'environnement de bureau COSMIC qui offre
+        un contrôle rapide et facile de votre système d'éclairage intelligent Philips Hue.
+    </p>
+    <p xml:lang="es">
+        COSMIC Hue es un applet de la bandeja del sistema para el entorno de escritorio COSMIC que proporciona
+        un control rápido y sencillo de su sistema de iluminación inteligente Philips Hue.
+    </p>
+    <p xml:lang="it">
+        COSMIC Hue è un applet della barra di sistema per l'ambiente desktop COSMIC che fornisce
+        un controllo rapido e semplice del sistema di illuminazione intelligente Philips Hue.
+    </p>
+    <p xml:lang="de">
+        COSMIC Hue ist ein Systemtray-Applet für die COSMIC-Desktop-Umgebung, das eine
+        schnelle und einfache Steuerung Ihres Philips Hue Smart-Lighting-Systems bietet.
+    </p>
+    <p xml:lang="pt">
+        COSMIC Hue é um applet da bandeja do sistema para o ambiente de trabalho COSMIC que fornece
+        controle rápido e fácil do seu sistema de iluminação inteligente Philips Hue.
+    </p>
+    <p xml:lang="nl">
+        COSMIC Hue is een systeemvak-applet voor de COSMIC-desktopomgeving die
+        snelle en eenvoudige bediening van uw Philips Hue smart verlichtingssysteem biedt.
+    </p>
     <p>
       Features include automatic bridge discovery, control of individual lights and groups, 
       brightness and color adjustment with an integrated color picker, quick access to scenes, 
@@ -26,6 +56,36 @@
         Mezi funkce patří automatické vyhledávání mostu (bridge), ovládání jednotlivých světel i skupin, 
         nastavení jasu a barev pomocí integrovaného výběru barev, rychlý přístup ke scénám 
         a podpora více jazyků.
+    </p>
+    <p xml:lang="fr">
+        Les fonctionnalités incluent la découverte automatique du bridge, le contrôle des lumières individuelles et des groupes,
+        le réglage de la luminosité et des couleurs avec un sélecteur de couleur intégré, un accès rapide aux scènes
+        et la prise en charge de plusieurs langues.
+    </p>
+    <p xml:lang="es">
+        Las características incluyen el descubrimiento automático del bridge, el control de luces individuales y grupos,
+        ajuste de brillo y color con un selector de color integrado, acceso rápido a escenas
+        y compatibilidad con varios idiomas.
+    </p>
+    <p xml:lang="it">
+        Le funzionalità includono la scoperta automatica del bridge, il controllo di singole luci e gruppi,
+        regolazione della luminosità e del colore con un selettore colore integrato, accesso rapido alle scene
+        e supporto per più lingue.
+    </p>
+    <p xml:lang="de">
+        Zu den Funktionen gehören automatische Bridge-Erkennung, Steuerung einzelner Lichter und Gruppen,
+        Helligkeits- und Farbanpassung mit einem integrierten Farbwähler, schneller Zugriff auf Szenen
+        und Unterstützung für mehrere Sprachen.
+    </p>
+    <p xml:lang="pt">
+        Os recursos incluem descoberta automática de bridge, controle de luzes individuais e grupos,
+        ajuste de brilho e cor com um seletor de cores integrado, acesso rápido a cenas
+        e suporte a vários idiomas.
+    </p>
+    <p xml:lang="nl">
+        Functies omvatten automatische bridge-detectie, bediening van afzonderlijke lampen en groepen,
+        helderheids- en kleurregeling met een geïntegreerde kleurkiezer, snelle toegang tot scènes
+        en ondersteuning voor meerdere talen.
     </p>
   </description>
   
@@ -43,16 +103,34 @@
     <screenshot type="default">
       <caption>Lights View</caption>
       <caption xml:lang="cs">Zobrazení světel</caption>
+      <caption xml:lang="fr">Vue des lumières</caption>
+      <caption xml:lang="es">Vista de luces</caption>
+      <caption xml:lang="it">Vista luci</caption>
+      <caption xml:lang="de">Lichter-Ansicht</caption>
+      <caption xml:lang="pt">Vista de luzes</caption>
+      <caption xml:lang="nl">Lampenoverzicht</caption>
       <image>https://raw.githubusercontent.com/clockworksfr/cosmic-ext-applet-hue/main/screenshots/screenshot_1.png</image>
     </screenshot>
     <screenshot>
       <caption>Groups View</caption>
       <caption xml:lang="cs">Zobrazení skupin</caption>
+      <caption xml:lang="fr">Vue des groupes</caption>
+      <caption xml:lang="es">Vista de grupos</caption>
+      <caption xml:lang="it">Vista gruppi</caption>
+      <caption xml:lang="de">Gruppen-Ansicht</caption>
+      <caption xml:lang="pt">Vista de grupos</caption>
+      <caption xml:lang="nl">Groepenoverzicht</caption>
       <image>https://raw.githubusercontent.com/clockworksfr/cosmic-ext-applet-hue/main/screenshots/screenshot_2.png</image>
     </screenshot>
     <screenshot>
       <caption>Scenes View</caption>
       <caption xml:lang="cs">Zobrazení scén</caption>
+      <caption xml:lang="fr">Vue des scènes</caption>
+      <caption xml:lang="es">Vista de escenas</caption>
+      <caption xml:lang="it">Vista scene</caption>
+      <caption xml:lang="de">Szenen-Ansicht</caption>
+      <caption xml:lang="pt">Vista de cenas</caption>
+      <caption xml:lang="nl">Scènesoverzicht</caption>
       <image>https://raw.githubusercontent.com/clockworksfr/cosmic-ext-applet-hue/main/screenshots/screenshot_3.png</image>
     </screenshot>
   </screenshots>
@@ -99,5 +177,17 @@
     
     <keyword xml:lang="cs">světla</keyword>
     <keyword xml:lang="cs">chytrá domácnost</keyword>
+    <keyword xml:lang="fr">lumières</keyword>
+    <keyword xml:lang="fr">maison intelligente</keyword>
+    <keyword xml:lang="es">luces</keyword>
+    <keyword xml:lang="es">hogar inteligente</keyword>
+    <keyword xml:lang="it">luci</keyword>
+    <keyword xml:lang="it">casa intelligente</keyword>
+    <keyword xml:lang="de">Lichter</keyword>
+    <keyword xml:lang="de">Smart Home</keyword>
+    <keyword xml:lang="pt">luzes</keyword>
+    <keyword xml:lang="pt">casa inteligente</keyword>
+    <keyword xml:lang="nl">lampen</keyword>
+    <keyword xml:lang="nl">slim huis</keyword>
   </keywords>
 </component>
