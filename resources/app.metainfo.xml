@@ -167,6 +167,10 @@
     <category>Utility</category>
     <category>Settings</category>
   </categories>
+
+  <provides>
+    <id>com.system76.CosmicApplet</id>
+  </provides>
   
   <keywords>
     <keyword>hue</keyword>
