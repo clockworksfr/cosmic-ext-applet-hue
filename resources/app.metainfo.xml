@@ -5,12 +5,14 @@
   <project_license>GPL-3.0-only</project_license>
   
   <name>COSMIC Hue</name>
+  <name xml:lang="pl">Odcienie dla COSMIC</name>
   <summary>Control Philips Hue lights from your COSMIC desktop</summary>
   <summary xml:lang="cs">Ovládejte světla Philips Hue z vašeho prostředí COSMIC</summary>
   <summary xml:lang="fr">Contrôlez vos lumières Philips Hue depuis votre bureau COSMIC</summary>
   <summary xml:lang="es">Controla tus luces Philips Hue desde tu escritorio COSMIC</summary>
   <summary xml:lang="it">Controlla le tue luci Philips Hue dal tuo desktop COSMIC</summary>
   <summary xml:lang="de">Steuern Sie Ihre Philips Hue Lichter von Ihrem COSMIC-Desktop</summary>
+  <summary xml:lang="pl">Zarządzaj światłami Philips Hue ze środowiska COSMIC</summary>
   <summary xml:lang="pt">Controle suas luzes Philips Hue a partir do seu ambiente de trabalho COSMIC</summary>
   <summary xml:lang="nl">Beheer uw Philips Hue lampen vanaf uw COSMIC-desktop</summary>
   
@@ -38,6 +40,10 @@
     <p xml:lang="de">
         COSMIC Hue ist ein Systemtray-Applet für die COSMIC-Desktop-Umgebung, das eine
         schnelle und einfache Steuerung Ihres Philips Hue Smart-Lighting-Systems bietet.
+    </p>
+    <p xml:lang="pl">
+        Odcienie dla COSMIC jest apletem na panele środowiska graficznego COSMIC, 
+        który zapewnia szybką i prostą kontrolę nad twoim systemem oświetlenia Philips Hue.
     </p>
     <p xml:lang="pt">
         COSMIC Hue é um applet da bandeja do sistema para o ambiente de trabalho COSMIC que fornece
@@ -107,6 +113,7 @@
       <caption xml:lang="es">Vista de luces</caption>
       <caption xml:lang="it">Vista luci</caption>
       <caption xml:lang="de">Lichter-Ansicht</caption>
+      <caption xml:lang="pl">Widok świateł</caption>
       <caption xml:lang="pt">Vista de luzes</caption>
       <caption xml:lang="nl">Lampenoverzicht</caption>
       <image>https://raw.githubusercontent.com/clockworksfr/cosmic-ext-applet-hue/main/screenshots/screenshot_1.png</image>
@@ -118,6 +125,7 @@
       <caption xml:lang="es">Vista de grupos</caption>
       <caption xml:lang="it">Vista gruppi</caption>
       <caption xml:lang="de">Gruppen-Ansicht</caption>
+      <caption xml:lang="pl">Widok grup</caption>
       <caption xml:lang="pt">Vista de grupos</caption>
       <caption xml:lang="nl">Groepenoverzicht</caption>
       <image>https://raw.githubusercontent.com/clockworksfr/cosmic-ext-applet-hue/main/screenshots/screenshot_2.png</image>
@@ -129,6 +137,7 @@
       <caption xml:lang="es">Vista de escenas</caption>
       <caption xml:lang="it">Vista scene</caption>
       <caption xml:lang="de">Szenen-Ansicht</caption>
+      <caption xml:lang="pl">Widok scen</caption>
       <caption xml:lang="pt">Vista de cenas</caption>
       <caption xml:lang="nl">Scènesoverzicht</caption>
       <image>https://raw.githubusercontent.com/clockworksfr/cosmic-ext-applet-hue/main/screenshots/screenshot_3.png</image>
@@ -189,6 +198,8 @@
     <keyword xml:lang="it">casa intelligente</keyword>
     <keyword xml:lang="de">Lichter</keyword>
     <keyword xml:lang="de">Smart Home</keyword>
+    <keyword xml:lang="pl">światła</keyword>
+    <keyword xml:lang="pl">inteligentny dom</keyword>
     <keyword xml:lang="pt">luzes</keyword>
     <keyword xml:lang="pt">casa inteligente</keyword>
     <keyword xml:lang="nl">lampen</keyword>
